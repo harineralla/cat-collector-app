@@ -8,5 +8,13 @@ CREATE TABLE cats (
     url TEXT,
     favorite BOOLEAN DEFAULT FALSE,
     custom_name TEXT,
-    description TEXT
+    description TEXT,
+    breed_id TEXT,
+    breed_name TEXT,
+    cfa_url TEXT,
+    vetstreet_url TEXT,
+    vcahospitals_url TEXT,
+    origin TEXT,
+    life_span TEXT,
+    alt_names TEXT
 );

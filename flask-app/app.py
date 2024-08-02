@@ -6,14 +6,13 @@ import psycopg2
 app = Flask(__name__)
 CORS(app)
 
-# Configuration for TheCatAPI
-API_KEY = 'your_api_key'
+API_KEY = 'live_RNONcningE3gOznNu8w7hN02iVk0WRYc9BeimyYGGYjraakrDUmz4Vc2zGSfJ5y4'
 API_URL = 'https://api.thecatapi.com/v1/images/search'
 
 class CatAPI:
     def __init__(self):
         self.conn = self.connect_db()
-    
+
     def connect_db(self):
         return psycopg2.connect(
             dbname="cat_collector",
@@ -33,19 +32,45 @@ class CatAPI:
     def insert_cats(self, cats):
         cur = self.conn.cursor()
         for cat in cats:
+            breed_id, breed_name, cfa_url, vetstreet_url, vcahospitals_url, origin, description, life_span, alt_names = (
+                None, None, None, None, None, None, None, None, None)
+            if len(cat["breeds"]) > 0:
+                breed_id = cat["breeds"][0].get("id")
+                breed_name = cat["breeds"][0].get("name")
+                cfa_url = cat["breeds"][0].get("cfa_url")
+                vetstreet_url = cat["breeds"][0].get("vetstreet_url")
+                origin = cat["breeds"][0].get("origin")
+                description = cat["breeds"][0].get("description")
+                life_span = cat["breeds"][0].get("life_span")
+                alt_names = cat["breeds"][0].get("alt_names")
             cur.execute(
-                "INSERT INTO cats (api_id, url) VALUES (%s, %s)",
-                (cat['id'], cat['url'])
+                "INSERT INTO cats (api_id, url, breed_id, breed_name, cfa_url, vetstreet_url, origin, description, life_span, alt_names) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (cat['id'], cat['url'], breed_id, breed_name, cfa_url,
+                 vetstreet_url, origin, description, life_span, alt_names)
             )
         self.conn.commit()
 
-    def get_cats(self, page, per_page):
+    def get_cats(self, page, per_page, breed=None):
+        cur = self.conn.cursor()
+        query = "SELECT * FROM cats where favorite =  false"
+        if breed:
+            query += f" AND breed_name ilike '%{breed}%'"
+        query += f" ORDER BY id LIMIT {per_page} OFFSET {(page - 1) * per_page}"
+        cur.execute(
+            query
+        )
+        rows = cur.fetchall()
+        columns = [desc[0] for desc in cur.description]
+        return [dict(zip(columns, row)) for row in rows]
+
+    def get_favourite_cats(self):
         cur = self.conn.cursor()
         cur.execute(
-            "SELECT * FROM cats ORDER BY id LIMIT %s OFFSET %s",
-            (per_page, (page - 1) * per_page)
+            "SELECT * FROM cats where favorite =  true ORDER BY id"
         )
-        return cur.fetchall()
+        rows = cur.fetchall()
+        columns = [desc[0] for desc in cur.description]
+        return [dict(zip(columns, row)) for row in rows]
 
     def get_cat(self, cat_id):
         cur = self.conn.cursor()
@@ -55,20 +80,33 @@ class CatAPI:
         )
         return cur.fetchone()
 
-    def add_cat(self, new_cat):
-        cur = self.conn.cursor()
-        cur.execute(
-            "INSERT INTO cats (api_id, url, favorite, custom_name, description) VALUES (%s, %s, %s, %s, %s)",
-            (new_cat['api_id'], new_cat['url'], new_cat['favorite'], new_cat['custom_name'], new_cat['description'])
-        )
-        self.conn.commit()
-
     def update_cat(self, cat_id, new_data):
         cur = self.conn.cursor()
         cur.execute(
-            "UPDATE cats SET url = %s, favorite = %s, custom_name = %s, description = %s WHERE id = %s",
-            (new_data['url'], new_data['favorite'], new_data['custom_name'], new_data['description'], cat_id)
+            """
+            UPDATE cats
+            SET
+                url = %s,
+                favorite = %s,
+                custom_name = %s,
+                description = %s,
+                breed_id = %s,
+                breed_name = %s,
+                cfa_url = %s,
+                vetstreet_url = %s,
+                origin = %s,
+                life_span = %s,
+                alt_names = %s
+            WHERE id = %s
+            """,
+            (
+                new_data['url'], new_data['favorite'], new_data['custom_name'],
+                new_data['description'], new_data['breed_id'], new_data['breed_name'],
+                new_data['cfa_url'], new_data['vetstreet_url'], new_data['origin'],
+                new_data['life_span'], new_data['alt_names'], cat_id
+            )
         )
+
         self.conn.commit()
 
     def delete_cat(self, cat_id):
@@ -95,14 +133,26 @@ class CatAPI:
         )
         self.conn.commit()
 
+
 cat_api = CatAPI()
+
 
 @app.route('/cats', methods=['GET'])
 def get_cats():
-    page = request.args.get('page', default=1)
-    per_page = request.args.get('per_page', default=10)
-    cats = cat_api.get_cats(page, per_page)
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=10, type=int)
+    breed = request.args.get('breed', default=None)
+    cats = cat_api.get_cats(page, per_page, breed)
     return jsonify(cats)
+
+
+@app.route('/getFavouriteCats', methods=['GET'])
+def get_favourite_cats():
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=10, type=int)
+    cats = cat_api.get_favourite_cats()
+    return jsonify(cats)
+
 
 @app.route('/cats/<int:cat_id>', methods=['GET'])
 def get_cat(cat_id):
@@ -111,34 +161,31 @@ def get_cat(cat_id):
         abort(404)
     return jsonify(cat)
 
-@app.route('/cats', methods=['POST'])
-def add_cat():
-    new_cat = request.get_json()
-    cat_api.add_cat(new_cat)
-    return jsonify(new_cat), 201
-
-@app.route('/cats/<int:cat_id>', methods=['PUT'])
-def update_cat(cat_id):
-    new_data = request.get_json()
-    cat_api.update_cat(cat_id, new_data)
-    return '', 204
 
 @app.route('/cats/<int:cat_id>', methods=['DELETE'])
 def delete_cat(cat_id):
     cat_api.delete_cat(cat_id)
     return '', 204
 
+
 @app.route('/cats/<int:cat_id>/favorite', methods=['POST'])
 def mark_cat_as_favorite(cat_id):
     cat_api.mark_cat_as_favorite(cat_id)
     return '', 204
+
 
 @app.route('/cats/<int:cat_id>/unfavorite', methods=['POST'])
 def unmark_cat_as_favorite(cat_id):
     cat_api.unmark_cat_as_favorite(cat_id)
     return '', 204
 
-if __name__ == '__main__':
+
+cur = cat_api.conn.cursor()
+cur.execute("SELECT COUNT(*) FROM cats")
+count = cur.fetchone()[0]
+if count == 0:
     cats = cat_api.fetch_cats()
     cat_api.insert_cats(cats)
+
+if __name__ == '__main__':
     app.run(debug=True)
