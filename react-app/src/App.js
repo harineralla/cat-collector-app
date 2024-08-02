@@ -1,24 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+
+import React, { useState } from 'react';
+import CatList from './components/CatList';
+import CollectedCats from './components/CollectedCats';
 
 function App() {
+  const [collectedCats, setCollectedCats] = useState([]);
+
+  const collectCat = (cat) => {
+    setCollectedCats([...collectedCats, cat]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Cat Collector APP</h1>
+      <CatList collectCat={collectCat} />
+      <h1>SEPARATIO</h1>
+      <CollectedCats cats={collectedCats} />
     </div>
+
+
   );
 }
 
