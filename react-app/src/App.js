@@ -14,7 +14,6 @@ function App() {
     <div>
       <h1>Cat Collector APP</h1>
       <CatList collectCat={collectCat} />
-      <h1>SEPARATIO</h1>
       <CollectedCats cats={collectedCats} />
     </div>
 
