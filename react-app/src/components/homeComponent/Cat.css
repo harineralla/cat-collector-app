@@ -1,0 +1,79 @@
+/* Cat.css */
+.cat-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-width: 270px;
+    min-height: 400px;
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure content and buttons are spaced */
+  }
+  
+  .cat-image {
+    width: 100%;
+    height: auto;
+    min-width: 230px;
+    min-height: 230px;
+    max-width: 200px; /* Adjust the maximum width as needed */
+    max-height: 200px; /* Adjust the maximum height as needed */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    border-radius: 4px;
+  }
+
+  .cat-image-pop-up {
+    width: 100%;
+    height: auto;
+    min-width: 230px;
+    min-height: 400px;
+    /* max-width: 200px; */
+    max-height: 400px; /* Adjust the maximum height as needed */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    border-radius: 4px;
+  }
+  
+  .cat-description {
+    max-height: 50px; /* Limit the height of the description */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: "#lelele";
+    border-radius: 4px;
+    text-align: left;
+  }
+  
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: auto; /* Pushes the button container to the bottom */
+  }
+  
+  .collect-button, .delete-button, .edit-button, .save-button .view-button {
+    margin: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%; /* Ensure buttons are the same width */
+  }
+  
+  .collect-button {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .edit-button, .save-button {
+    background-color: #008CBA;
+    color: white;
+  }
+  
