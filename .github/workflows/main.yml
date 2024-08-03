@@ -22,4 +22,4 @@ jobs:
       - name: Run Tests
         run: |
           cd flask-app
-          pytest
+          python -m unittest discover
