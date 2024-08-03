@@ -16,4 +16,4 @@ ADD COLUMN life_span TEXT,
 ADD COLUMN alt_names TEXT
 
 
-SELECT * FROM cats where favorite =  false AND breed_name ilike '%Co%' ORDER BY id
+SELECT * FROM cats WHERE favorite = false AND breed_name = 'Bombay' ORDER BY id;

@@ -16,7 +16,7 @@ function CatList({ AddtoFavourite, trigger }) {
 		setIsLoading(true);
 		let url = `http://127.0.0.1:5000/cats?page=${currentPage}&per_page=${catsPerPage}`;
 		if (breed) {
-			url += `& breed=${breed}`;
+			url += `&breed=${breed}`;
 		}
 		fetch(url)
 			.then(response => response.json())
@@ -50,7 +50,6 @@ function CatList({ AddtoFavourite, trigger }) {
 
 	const AddCatToFavourite = (catDetails) => {
 		AddtoFavourite(catDetails);
-		// fetchCats();
 	};
 
 	// const filteredCats = breedSearch ? cats : cats.filter(cat => cat.api_id.includes(search));

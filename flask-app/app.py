@@ -9,6 +9,7 @@ CORS(app)
 API_KEY = 'live_RNONcningE3gOznNu8w7hN02iVk0WRYc9BeimyYGGYjraakrDUmz4Vc2zGSfJ5y4'
 API_URL = 'https://api.thecatapi.com/v1/images/search'
 
+
 class CatAPI:
     def __init__(self):
         self.conn = self.connect_db()
@@ -22,40 +23,99 @@ class CatAPI:
             port="5432"
         )
 
-    def fetch_cats(self):
+    def fetch_cats(self, limit=100):
         headers = {
             'x-api-key': API_KEY
         }
-        response = requests.get(f'{API_URL}?limit=100', headers=headers)
-        return response.json()
+        cats = []
+        while len(cats) < limit:
+            try:
+                response = requests.get(f'{API_URL}?limit={limit}&has_breeds=1', headers=headers)
+                response.raise_for_status()
+                data = response.json()
+                for cat in data:
+                    if 'breeds' in cat:
+                        if len(cat['breeds']) > 0:
+                            breed_info = cat['breeds'][0]
+                            if (cat.get('url') and
+                                breed_info.get('description') and
+                                breed_info.get('name') and 
+                                breed_info.get('life_span') and 
+                                breed_info.get('alt_names') and 
+                                breed_info.get('id') and 
+                                breed_info.get('origin') and 
+                                breed_info.get('cfa_url') and 
+                                breed_info.get('vetstreet_url') and 
+                                breed_info.get('vcahospitals_url')):
+                                cats.append({
+                                    'api_id': cat['id'],
+                                    'url': cat['url'],
+                                    'favorite': False,
+                                    'custom_name': None,
+                                    'description': breed_info.get('description'),
+                                    'breed_id': breed_info.get('id'),
+                                    'breed_name': breed_info.get('name'),
+                                    'cfa_url': breed_info.get('cfa_url'),
+                                    'vetstreet_url': breed_info.get('vetstreet_url'),
+                                    'vcahospitals_url': breed_info.get('vcahospitals_url'),
+                                    'origin': breed_info.get('origin'),
+                                    'life_span': breed_info.get('life_span'),
+                                    'alt_names': breed_info.get('alt_names')
+                                })
+                    else:
+                        breakpoint()
+                        print(f"Cat data without 'breeds' key: {cat}")  # Debugging print
+                    if len(cats) >= limit:
+                        break
+            except requests.exceptions.RequestException as e:
+                print(f"Error fetching data from TheCatAPI: {e}")
+                break
+            except KeyError as e:
+                print(f"KeyError processing data: {e}")
+                continue
+            except Exception as e:
+                print(f"Unexpected error: {e}")
+                continue
+        return cats[:limit]
 
     def insert_cats(self, cats):
         cur = self.conn.cursor()
         for cat in cats:
-            breed_id, breed_name, cfa_url, vetstreet_url, vcahospitals_url, origin, description, life_span, alt_names = (
-                None, None, None, None, None, None, None, None, None)
-            if len(cat["breeds"]) > 0:
-                breed_id = cat["breeds"][0].get("id")
-                breed_name = cat["breeds"][0].get("name")
-                cfa_url = cat["breeds"][0].get("cfa_url")
-                vetstreet_url = cat["breeds"][0].get("vetstreet_url")
-                origin = cat["breeds"][0].get("origin")
-                description = cat["breeds"][0].get("description")
-                life_span = cat["breeds"][0].get("life_span")
-                alt_names = cat["breeds"][0].get("alt_names")
-            cur.execute(
-                "INSERT INTO cats (api_id, url, breed_id, breed_name, cfa_url, vetstreet_url, origin, description, life_span, alt_names) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                (cat['id'], cat['url'], breed_id, breed_name, cfa_url,
-                 vetstreet_url, origin, description, life_span, alt_names)
-            )
+            api_id = cat.get('api_id')
+            url = cat.get('url')
+            favorite = cat.get('favorite')
+            custom_name = cat.get('custom_name')
+            description = cat.get('description')
+            breed_id = cat.get('breed_id')
+            breed_name = cat.get('breed_name')
+            cfa_url = cat.get('cfa_url')
+            vetstreet_url = cat.get('vetstreet_url')
+            vcahospitals_url = cat.get('vcahospitals_url')
+            origin = cat.get('origin')
+            life_span = cat.get('life_span')
+            alt_names = cat.get('alt_names')
+            
+            try:
+                cur.execute(
+                    """
+                    INSERT INTO cats (api_id, url, favorite, custom_name, description, breed_id, breed_name, cfa_url, vetstreet_url, vcahospitals_url, origin, life_span, alt_names)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """,
+                    (api_id, url, favorite, custom_name, description, breed_id, breed_name, cfa_url, vetstreet_url, vcahospitals_url, origin, life_span, alt_names)
+                )
+                print(f"Inserted cat with API ID: {api_id}")  # Debug print
+            except Exception as e:
+                print(f"Error inserting cat data: {e}")
         self.conn.commit()
+
 
     def get_cats(self, page, per_page, breed=None):
         cur = self.conn.cursor()
-        query = "SELECT * FROM cats where favorite =  false"
+        query = "SELECT * FROM cats where favorite = false"
         if breed:
-            query += f" AND breed_name ilike '%{breed}%'"
+            query += f" AND breed_name = '{breed}'"
         query += f" ORDER BY id LIMIT {per_page} OFFSET {(page - 1) * per_page}"
+        # breakpoint()
         cur.execute(
             query
         )
@@ -134,11 +194,9 @@ class CatAPI:
         self.conn.commit()
 
 
-cat_api = CatAPI()
-
-
 @app.route('/cats', methods=['GET'])
 def get_cats():
+    # breakpoint()
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=10, type=int)
     breed = request.args.get('breed', default=None)
@@ -180,12 +238,15 @@ def unmark_cat_as_favorite(cat_id):
     return '', 204
 
 
+cat_api = CatAPI()
 cur = cat_api.conn.cursor()
 cur.execute("SELECT COUNT(*) FROM cats")
 count = cur.fetchone()[0]
 if count == 0:
     cats = cat_api.fetch_cats()
+    print("entering here finsishing fetching of cats")
     cat_api.insert_cats(cats)
+cur.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
