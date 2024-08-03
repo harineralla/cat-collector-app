@@ -1,77 +1,87 @@
 .cat-card {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 10px;
-    text-align: center;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    min-width: 270px;
-    min-height: 400px;
-    max-height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .cat-image {
-    width: 100%;
-    height: auto;
-    min-width: 230px;
-    min-height: 230px;
-    max-width: 200px; 
-    max-height: 200px; 
-    object-fit: cover;
-    border-radius: 4px;
-  }
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 270px;
+  min-height: 400px;
+  max-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-  .cat-image-pop-up {
-    width: 100%;
-    height: auto;
-    min-width: 230px;
-    min-height: 400px;
-    max-height: 400px; 
-    object-fit: cover;
-    border-radius: 4px;
-  }
-  
-  .cat-description {
-    max-height: 50px;
-    overflow-y: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 5px;
-    background-color: "#lelele";
-    border-radius: 4px;
-    text-align: left;
-  }
-  
-  .button-container {
-    display: flex;
-    flex-direction: column;
-    margin-top: auto; 
-  }
-  
-  .collect-button, .delete-button, .edit-button, .save-button .view-button {
-    margin: 5px;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-  }
-  
-  .collect-button {
-    background-color: #4CAF50;
-    color: white;
-  }
-  
-  .delete-button {
-    background-color: #f44336;
-    color: white;
-  }
-  
-  .edit-button, .save-button {
-    background-color: #008CBA;
-    color: white;
-  }
-  
+.cat-image {
+  width: 100%;
+  height: auto;
+  min-width: 230px;
+  min-height: 230px;
+  max-width: 200px; 
+  max-height: 200px; 
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cat-image-pop-up {
+  width: 100%;
+  height: auto;
+  min-width: 230px;
+  min-height: 400px;
+  max-height: 400px; 
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cat-description {
+  max-height: 50px;
+  overflow-y: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 5px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  text-align: left;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto; 
+}
+
+.button {
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 14px;
+}
+
+.collect-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.edit-button {
+  background-color: #008CBA;
+  color: white;
+}
+
+.save-button {
+  background-color: #008CBA;
+  color: white;
+}
+
+.view-button {
+  background-color: #008CBA;
+  color: white;
+}

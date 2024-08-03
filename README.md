@@ -43,7 +43,6 @@ The Cat Collector application interacts with TheCatAPI to retrieve information a
 5. **Initialize the database:**
     ```bash
     psql -U postgres -f init_db.sql
-    password:  12345 
     ```
 
 7. **Run the backend server:**

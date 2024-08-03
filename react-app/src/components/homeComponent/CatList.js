@@ -52,7 +52,6 @@ function CatList({ AddtoFavourite, trigger }) {
 		AddtoFavourite(catDetails);
 	};
 
-
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}

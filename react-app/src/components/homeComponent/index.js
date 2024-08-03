@@ -32,7 +32,7 @@ const HomePage = () => {
 
 	return (
 		<Container>
-			<Typography variant="h3" gutterBottom>Cat Dashboard</Typography>
+			<Typography variant="h4">Cat Dashboard</Typography>
 			<CatList AddtoFavourite={AddtoFavourite} trigger={trigger} />
 			<CollectedCats cats={trigger} MarkAsUnfavourite={MarkAsUnfavourite} />
 		</Container>
