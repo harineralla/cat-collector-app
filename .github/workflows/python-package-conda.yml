@@ -1,6 +1,13 @@
 name: Python Package using Conda
 
-on: [push]
+# Define the events that trigger the workflow
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-linux:
@@ -36,6 +43,8 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Test with pytest
+      env:
+        PYTHONPATH: ${{ github.workspace }}
       run: |
         conda install -y pytest
         pytest
