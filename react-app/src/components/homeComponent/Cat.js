@@ -24,9 +24,9 @@ const detailsModalStyle = {
 	top: '50%',
 	left: '50%',
 	transform: 'translate(-50%, -50%)',
-	width: '70%', // Occupy 70% of the screen
-	maxHeight: '80vh', // Maximum height of 80% of the viewport height
-	overflowY: 'auto', // Enable vertical scrolling if content exceeds maxHeight
+	width: '70%', 
+	maxHeight: '80vh', 
+	overflowY: 'auto',
 	bgcolor: 'background.paper',
 	border: '2px solid #000',
 	boxShadow: 24,
@@ -70,12 +70,10 @@ function Cat({ cat, AddtoFavourite, deleteCat, editCat, MarkAsUnfavourite }) {
 		setIsViewingDetails(false);
 	};
 
-	// Function to convert key to label
 	const convertKeyToLabel = (key) => {
 		return key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
 	};
 
-	// Create details array from cat object
 	const detailsArray = Object.keys(cat).map(key => ({
 		label: convertKeyToLabel(key),
 		value: cat[key] !== undefined && cat[key] !== null ? cat[key].toString() : 'N/A'

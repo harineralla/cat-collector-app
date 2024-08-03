@@ -44,7 +44,7 @@ function CatList({ AddtoFavourite, trigger }) {
 
 	const handleSearch = () => {
 		setBreedSearch(search);
-		setCurrentPage(1); // Reset to first page on new search
+		setCurrentPage(1);
 		fetchCats(search);
 	};
 
@@ -52,7 +52,6 @@ function CatList({ AddtoFavourite, trigger }) {
 		AddtoFavourite(catDetails);
 	};
 
-	// const filteredCats = breedSearch ? cats : cats.filter(cat => cat.api_id.includes(search));
 
 	if (isLoading) {
 		return <div>Loading...</div>;
