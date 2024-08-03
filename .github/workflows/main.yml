@@ -45,7 +45,7 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: |
-          psql -h localhost -U postgres -c "CREATE DATABASE cat_collector;"
+          psql -h localhost -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'cat_collector'" | grep -q 1 || psql -h localhost -U postgres -c "CREATE DATABASE cat_collector;"
           psql -h localhost -U postgres -d cat_collector -f flask-app/init_db.sql
 
       - name: Run Tests
