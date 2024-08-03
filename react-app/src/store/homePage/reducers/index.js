@@ -1,4 +1,3 @@
-// src/redux/reducers/dataReducer.js
 import { FETCH_DATA_SUCCESS } from "../constants";
 
 const initialState = {

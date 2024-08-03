@@ -1,4 +1,3 @@
-// src/redux/actions/dataActions.js
 import axios from 'axios';
 import { FETCH_DATA_SUCCESS } from '../constants';
 
