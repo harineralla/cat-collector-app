@@ -11,9 +11,11 @@ body, html {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  background: rgba(18, 18, 18, 0.865); /* Transparent dark background */
+  backdrop-filter: blur(50px); /* Blur effect */
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  /* background-image: url('./background.png'); If you want to use an image */
   position: relative;
 }
 
@@ -28,17 +30,21 @@ body, html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.2); /* Adjusted for glassmorphism */
+  backdrop-filter: blur(10px); /* Subtle blur effect */
   z-index: 0;
 }
 
 .header {
   width: 100%;
-  background-color: #87CEEB;
+  background: rgba(110, 203, 239, 0.868);
+  background-color: rgb(1, 57, 58);
+  backdrop-filter: blur(100px);
   padding: 10px 0;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
 }
 
 .header h1 {

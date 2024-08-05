@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Grid, Typography, Container } from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaw } from '@fortawesome/free-solid-svg-icons';
 import { ToastContainer, toast } from 'react-toastify';
 import CatList from './CatList';
 import CollectedCats from './CollectedCats';
@@ -11,7 +13,7 @@ const HomePage = () => {
 		let res = await fetch(`http://127.0.0.1:5000/cats/${cat.id}/favorite`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json' 
+				'Content-Type': 'application/json'
 			}
 		})
 		toast.success("Successfully added cat to favourites")
@@ -32,7 +34,12 @@ const HomePage = () => {
 
 	return (
 		<Container>
-			<Typography variant="h4">Cat Dashboard</Typography>
+			<Typography variant="h4" sx={{
+				marginLeft: '10px', marginBottom: '10px', display: 'flex', alignItems: 'center'
+			}}>
+				Cat Dashboard
+				<FontAwesomeIcon icon={faPaw} style={{ marginLeft: '10px' }} />
+			</Typography>
 			<CatList AddtoFavourite={AddtoFavourite} trigger={trigger} />
 			<CollectedCats cats={trigger} MarkAsUnfavourite={MarkAsUnfavourite} />
 		</Container>

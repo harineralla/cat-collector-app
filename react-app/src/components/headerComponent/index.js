@@ -13,21 +13,22 @@ const LinkButton = styled(Link)({
 	color: 'inherit',
 });
 
-const lightTheme = createTheme({
+const darkTheme = createTheme({
 	palette: {
-		mode: 'light',
+		mode: 'dark',
 		primary: {
-			main: '#add8e6',
+			main: '#121212', // Dark background
 		},
 		secondary: {
-			main: '#212121',
+			main: '#ff4081', // Pink
 		},
 		background: {
-			default: '#ffffff',
-			paper: '#f5f5f5',
+			default: '#121212', // Dark background
+			paper: '#1c1c1c', // Slightly lighter dark
 		},
 		text: {
-			primary: '#212121',
+			primary: '#ffffff', // White text
+			secondary: '#b0bec5', // Light grey text
 		},
 	},
 	typography: {
@@ -35,18 +36,34 @@ const lightTheme = createTheme({
 	},
 });
 
+
 const HeaderComponent = () => {
 	return (
-		<ThemeProvider theme={lightTheme}>
-			<AppBar position="static" sx={{ bgcolor: lightTheme.palette.primary.main }}>
+		<ThemeProvider theme={darkTheme}>
+			<AppBar 
+                position="static" 
+                sx={{ 
+                    background: 'rgba(18, 18, 18, 0.7)', // Transparent dark background
+                    backdropFilter: 'blur(10px)', // Blur effect
+                    boxShadow: '0 4px 4px rgba(0, 0, 0, 0.1)', // Subtle shadow
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.3)' // Subtle border
+                }}
+            >
 				<Toolbar>
 					<Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
 						<Box sx={{ flexGrow: 1 }}>
 							<LinkButton to="/">
-								<Button sx={{ color: lightTheme.palette.secondary.main }}>Home</Button>
+								<Button sx={{ color: darkTheme.palette.secondary.main }}>Home</Button>
 							</LinkButton>
 						</Box>
-						<Typography variant="h4" sx={{ color: lightTheme.palette.secondary.main, textAlign: 'center', flexGrow: 1 }}>
+						<Typography 
+                            variant="h4" 
+                            sx={{ 
+                                color: darkTheme.palette.text.primary, 
+                                textAlign: 'center', 
+                                flexGrow: 1 
+                            }}
+                        >
 							Cat Collector Application
 						</Typography>
 						<Box sx={{ flexGrow: 1 }} />

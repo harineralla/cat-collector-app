@@ -21,6 +21,7 @@ function CatList({ AddtoFavourite, trigger }) {
 		fetch(url)
 			.then(response => response.json())
 			.then(data => {
+				// console.log("cat details", data);
 				setCats(data);
 				toast.success("Successfully fetched cat details.");
 				setIsLoading(false);
@@ -63,24 +64,31 @@ function CatList({ AddtoFavourite, trigger }) {
 					label="Search cats by breed"
 					value={search}
 					onChange={handleSearchChange}
-					fullWidth
-					margin="normal"
+					// fullWidth
+					style={{ marginLeft: '10px', width: '1800px' }}
+				// margin="normal"/
 				/>
 				<IconButton onClick={handleSearch} style={{ marginLeft: '10px' }}>
 					<SearchIcon />
 				</IconButton>
 			</div>
-			<Grid container spacing={3}>
+			<div style={{ marginTop: '20px' }}>
+				<Button
+					onClick={prevPage}
+					disabled={currentPage === 1}
+					style={{ marginRight: '10px', color: '#ff4081' }}>Previous</Button>
+				<Button
+					onClick={nextPage}
+					disabled={cats.length < catsPerPage || cats.length === 0}
+					style={{ color: '#ff4081' }}>Next</Button>
+			</div>
+			<Grid container spacing={3} >
 				{cats.map(cat => (
 					<Grid item xs={12} sm={6} md={4} lg={3} key={cat.api_id}>
 						<Cat cat={cat} AddtoFavourite={AddCatToFavourite} />
 					</Grid>
 				))}
 			</Grid>
-			<div style={{ marginTop: '20px' }}>
-				<Button onClick={prevPage} disabled={currentPage === 1} style={{ marginRight: '10px' }}>Previous</Button>
-				<Button onClick={nextPage} disabled={cats.length < catsPerPage || cats.length === 0}>Next</Button>
-			</div>
 		</div>
 	);
 }
